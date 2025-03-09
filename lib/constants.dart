@@ -1,0 +1,3 @@
+const supabaseUrl = 'https://tslmdwshvepquzcxaabs.supabase.co';
+const supabaseApi =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRzbG1kd3NodmVwcXV6Y3hhYWJzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MTQ4MzcxMSwiZXhwIjoyMDU3MDU5NzExfQ.RLhbamTw73ZpZ5pWt-XNNmx2_aiswjR9aa2X1pMaxEA';

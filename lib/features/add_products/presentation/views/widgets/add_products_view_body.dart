@@ -1,23 +1,167 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
-class AddProductsViewBody extends StatefulWidget {
-  const AddProductsViewBody({super.key});
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fruits_hub_dashboard/core/widgets/accept_terms_and_conditions.dart';
+import 'package:fruits_hub_dashboard/core/widgets/custom_button.dart';
+import 'package:fruits_hub_dashboard/core/widgets/custom_form_text_field.dart';
+import 'package:fruits_hub_dashboard/features/add_products/domain/entities/product_entity.dart';
+import 'package:fruits_hub_dashboard/features/add_products/domain/entities/review_entity.dart';
+import 'package:fruits_hub_dashboard/features/add_products/presentation/manger/cubit/add_product_cubit.dart';
+import 'package:fruits_hub_dashboard/features/add_products/presentation/views/widgets/image_picker_container.dart';
+import 'package:fruits_hub_dashboard/features/add_products/presentation/views/widgets/is_organic_check_box.dart';
+
+class AddProductViewBody extends StatefulWidget {
+  const AddProductViewBody({super.key});
 
   @override
-  State<AddProductsViewBody> createState() => _AddProductsViewBodyState();
+  State<AddProductViewBody> createState() => _AddProductViewBodyState();
 }
 
-class _AddProductsViewBodyState extends State<AddProductsViewBody> {
-  GlobalKey<FormState> globalKey = GlobalKey();
+class _AddProductViewBodyState extends State<AddProductViewBody> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
+
+  late String name, code, description;
+  late num price, expirationMonths, numberOfCalories, unitAmount;
+  File? image;
+  bool isFeatured = false;
+  bool isOrganic = false;
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Form(
-        key: globalKey,
-        autovalidateMode: autovalidateMode,
-        child: Column(),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          autovalidateMode: autovalidateMode,
+          child: Column(
+            children: [
+              CustomFormTextField(
+                onSaved: (value) {
+                  name = value!;
+                },
+                hintText: 'Product Name',
+                textInputType: TextInputType.text,
+              ),
+              const SizedBox(height: 16),
+              CustomFormTextField(
+                onSaved: (value) {
+                  price = num.parse(value!);
+                },
+                hintText: 'Product Price',
+                textInputType: TextInputType.number,
+              ),
+              const SizedBox(height: 16),
+              CustomFormTextField(
+                onSaved: (value) {
+                  expirationMonths = num.parse(value!);
+                },
+                hintText: 'Expiration Months',
+                textInputType: TextInputType.number,
+              ),
+              const SizedBox(height: 16),
+              CustomFormTextField(
+                onSaved: (value) {
+                  numberOfCalories = num.parse(value!);
+                },
+                hintText: 'Number Of Calories',
+                textInputType: TextInputType.number,
+              ),
+              const SizedBox(height: 16),
+              CustomFormTextField(
+                onSaved: (value) {
+                  unitAmount = num.parse(value!);
+                },
+                hintText: 'Unit Amont',
+                textInputType: TextInputType.number,
+              ),
+              const SizedBox(height: 16),
+              CustomFormTextField(
+                onSaved: (value) {
+                  code = value!.toLowerCase();
+                },
+                hintText: 'Product Code',
+                textInputType: TextInputType.number,
+              ),
+              const SizedBox(height: 16),
+              CustomFormTextField(
+                onSaved: (value) {
+                  description = value!;
+                },
+                hintText: 'Product Description',
+                textInputType: TextInputType.text,
+                maxLines: 5,
+              ),
+              const SizedBox(height: 16),
+              IsOrganciCheckBox(
+                onChanged: (value) {
+                  isOrganic = value;
+                },
+              ),
+              const SizedBox(height: 16),
+              IsFeaturedItem(
+                onChanged: (value) {
+                  isFeatured = value;
+                },
+              ),
+              const SizedBox(height: 16),
+              ImagePickerContainer(
+                onChanged: (image) {
+                  this.image = image;
+                },
+              ),
+              const SizedBox(height: 24),
+              CustomButton(
+                onPressed: () {
+                  if (image != null) {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      ProductEntity input = ProductEntity(
+                        name: name,
+                        reviews: [
+                          ReviewEntity(
+                            name: 'tharwat',
+                            image:
+                                'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pexels.com%2Fsearch%2Fbeautiful%2F&psig=AOvVaw19xjUBre0RXfV2IZ-cEAEV&ust=1726749821993000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCPCJ3L_CzIgDFQAAAAAdAAAAABAE',
+                            ratting: 5,
+                            date: DateTime.now().toIso8601String(),
+                            reviewDescription: 'Nice product',
+                          ),
+                        ],
+                        isOrganic: isOrganic,
+                        code: code,
+                        description: description,
+                        expirationsMonths: expirationMonths.toInt(),
+                        numberOfCalories: numberOfCalories.toInt(),
+                        unitAmount: unitAmount.toInt(),
+                        price: price,
+                        image: image!,
+                        isFeatured: isFeatured,
+                      );
+
+                      context.read<AddProductCubit>().addProduct(input);
+                    } else {
+                      autovalidateMode = AutovalidateMode.always;
+                      setState(() {});
+                    }
+                  } else {
+                    showError(context);
+                  }
+                },
+                text: 'Add Product',
+              ),
+              const SizedBox(height: 24),
+            ],
+          ),
+        ),
       ),
     );
+  }
+
+  void showError(BuildContext context) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Please select an image')));
   }
 }
