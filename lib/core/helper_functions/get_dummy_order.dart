@@ -1,12 +1,14 @@
-import 'package:fruits_hub_dashboard/features/order/data/models/order_model.dart';
-import 'package:fruits_hub_dashboard/features/order/data/models/product_order_model.dart';
-import 'package:fruits_hub_dashboard/features/order/data/models/shipping_address_model.dart';
+import 'package:fruits_hub_dashboard/core/enums/order_status_enum.dart';
+import 'package:fruits_hub_dashboard/features/order/domain/entities/order_entity.dart';
+import 'package:fruits_hub_dashboard/features/order/domain/entities/product_order_entity.dart';
+import 'package:fruits_hub_dashboard/features/order/domain/entities/shipping_address_entity.dart';
 
-OrderModel getDummyOrder() {
-  return OrderModel(
+OrderEntity getDummyOrder() {
+  return OrderEntity(
+    status: OrderStatusEnum.pending,
     totalPrice: 199.99,
     uID: 'ORD123456',
-    shippingAddressModel: ShippingAddressModel(
+    shippingAddressModel: ShippingAddressEntity(
       name: 'John Doe',
       phone: '+1234567890',
       address: '123 Main St',
@@ -16,14 +18,14 @@ OrderModel getDummyOrder() {
     ),
     paymentMethod: 'Credit Card',
     products: [
-      ProductOrderModel(
+      ProductOrderEntity(
         name: 'Apple',
         code: 'APL123',
         imageUrl: 'https://via.placeholder.com/50',
         price: 3.99,
         quantity: 5,
       ),
-      ProductOrderModel(
+      ProductOrderEntity(
         name: 'Banana',
         code: 'BAN456',
         imageUrl: 'https://via.placeholder.com/50',

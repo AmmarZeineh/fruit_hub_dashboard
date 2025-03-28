@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fruits_hub_dashboard/features/order/data/models/order_model.dart';
+import 'package:fruits_hub_dashboard/core/enums/order_status_enum.dart';
+import 'package:fruits_hub_dashboard/features/order/domain/entities/order_entity.dart';
 
 class OrderItem extends StatelessWidget {
-  final OrderModel order;
+  final OrderEntity order;
 
   const OrderItem({super.key, required this.order});
 
@@ -18,10 +19,39 @@ class OrderItem extends StatelessWidget {
           children: [
             Text(
               'Order ID: ${order.uID}',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            _buildShippingDetails(),
+            Row(
+              children: [
+                _buildShippingDetails(),
+                const Spacer(),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color:
+                        order.status == OrderStatusEnum.accepted
+                            ? Colors.blue
+                            : order.status == OrderStatusEnum.delivered
+                            ? Colors.green
+                            : order.status == OrderStatusEnum.pending
+                            ? Colors.orange
+                            : Colors.red,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    order.status.name,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
             const Divider(),
             _buildProductList(),
             const SizedBox(height: 8),

@@ -6,6 +6,8 @@ import 'package:fruits_hub_dashboard/core/services/database_service.dart';
 import 'package:fruits_hub_dashboard/core/services/fire_store_service.dart';
 import 'package:fruits_hub_dashboard/core/services/storage_service.dart';
 import 'package:fruits_hub_dashboard/core/services/supabase_service.dart';
+import 'package:fruits_hub_dashboard/features/order/data/repos/orders_repo_impl.dart';
+import 'package:fruits_hub_dashboard/features/order/domain/repos/orders_repo.dart';
 import 'package:get_it/get_it.dart';
 
 final GetIt getIt = GetIt.instance;
@@ -19,5 +21,8 @@ void setupLocator() {
   );
   getIt.registerSingleton<ProductsRepo>(
     ProductsRepoImpl(getIt.get<DataBaseService>()),
+  );
+  getIt.registerSingleton<OrdersRepo>(
+    OrdersRepoImpl(getIt.get<DataBaseService>()),
   );
 }
