@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fruits_hub_dashboard/core/enums/order_status_enum.dart';
 import 'package:fruits_hub_dashboard/features/order/domain/entities/order_entity.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class OrderItem extends StatelessWidget {
   final OrderEntity order;
@@ -101,7 +103,17 @@ class OrderItem extends StatelessWidget {
       children:
           order.products.map((product) {
             return ListTile(
-              leading: Icon(Icons.image),
+              leading: SizedBox(
+                width: 24,
+                height: 24,
+                child: CachedNetworkImage(
+                  imageUrl: product.imageUrl,
+                  placeholder:
+                      (context, url) =>
+                          Skeletonizer(child: const Icon(Icons.image)),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                ),
+              ),
               title: Text(
                 product.name,
                 style: const TextStyle(
